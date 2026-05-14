@@ -14,8 +14,8 @@ class SupportMessageSerializer(serializers.ModelSerializer):
             return 'GymMS Assistant'
         if obj.sender:
             profile = getattr(obj.sender, 'profile', None)
-            if profile and (profile.is_admin or profile.is_vendor):
-                return f"{'Admin' if profile.is_admin else 'Vendor'} - {obj.sender.username}"
+            if profile and (profile.is_admin or profile.is_trainer):
+                return f"{'Admin' if profile.is_admin else 'Trainer'} - {obj.sender.username}"
             return obj.sender.username
         return 'Support'
 

@@ -6,7 +6,9 @@ import uuid
 class Payment(models.Model):
     PAYMENT_STATUS = [
         ('PENDING', 'Pending'),
+        ('PAID', 'Paid'),
         ('COMPLETED', 'Completed'),
+        ('OVERDUE', 'Overdue'),
         ('FAILED', 'Failed'),
         ('REFUNDED', 'Refunded'),
     ]
@@ -31,6 +33,10 @@ class Payment(models.Model):
     
     def __str__(self):
         return f"{self.member.username} - ${self.amount} - {self.status}"
+
+    @property
+    def receipt_number(self):
+        return f"RCPT-{self.id:06d}" if self.id else ""
     
     class Meta:
         ordering = ['-payment_date']

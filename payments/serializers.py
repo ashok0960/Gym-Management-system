@@ -6,6 +6,7 @@ from memberships.serializers import MembershipPlanSerializer
 class PaymentSerializer(serializers.ModelSerializer):
     member_details = UserSerializer(source='member', read_only=True)
     plan_details = MembershipPlanSerializer(source='membership_plan', read_only=True)
+    receipt_number = serializers.CharField(read_only=True)
     
     class Meta:
         model = Payment

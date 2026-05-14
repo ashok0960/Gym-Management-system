@@ -8,13 +8,13 @@ const Spinner = () => (
   </div>
 )
 
-const PrivateRoute = ({ children, adminOnly = false, vendorOnly = false, memberOnly = false }) => {
-  const { isAuthenticated, isAdmin, isVendor, loading } = useAuth()
+const PrivateRoute = ({ children, adminOnly = false, vendorOnly = false, trainerOnly = false, memberOnly = false }) => {
+  const { isAuthenticated, isAdmin, isTrainer, isVendor, loading } = useAuth()
   if (loading) return <Spinner />
   if (!isAuthenticated) return <Navigate to="/login" replace />
-  if (adminOnly && !isAdmin) return <Navigate to={isVendor ? '/vendor' : '/dashboard'} replace />
-  if (vendorOnly && !isVendor && !isAdmin) return <Navigate to="/dashboard" replace />
-  if (memberOnly && (isAdmin || isVendor)) return <Navigate to={isAdmin ? '/admin' : '/vendor'} replace />
+  if (adminOnly && !isAdmin) return <Navigate to={isTrainer || isVendor ? '/trainer' : '/dashboard'} replace />
+  if ((trainerOnly || vendorOnly) && !isTrainer && !isVendor && !isAdmin) return <Navigate to="/dashboard" replace />
+  if (memberOnly && (isAdmin || isTrainer || isVendor)) return <Navigate to={isAdmin ? '/admin' : '/trainer'} replace />
   return children
 }
 

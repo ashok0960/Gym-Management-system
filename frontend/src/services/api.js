@@ -27,11 +27,17 @@ api.interceptors.response.use(res => res, async (error) => {
 
 export const authAPI = {
   register: (d) => api.post('/accounts/register/', d),
+  sendVerificationCode: (d) => api.post('/accounts/send-verification-code/', d),
   login: (d) => api.post('/accounts/login/', d),
+  verifyLoginOTP: (d) => api.post('/accounts/login/verify-otp/', d),
   getProfile: () => api.get('/accounts/profile/'),
   updateProfile: (d) => api.put('/accounts/profile/update/', d),
   changePassword: (d) => api.post('/accounts/change-password/', d),
-  getMembers: () => api.get('/accounts/members/'),
+  forgotPassword: (d) => api.post('/accounts/forgot-password/', d),
+  resetPassword: (d) => api.post('/accounts/reset-password/', d),
+  getMembers: (p) => api.get('/accounts/members/manage/', { params: p }),
+  updateMember: (id, d) => api.patch(`/accounts/members/manage/${id}/`, d),
+  deleteMember: (id) => api.delete(`/accounts/members/manage/${id}/`),
   toggleMemberStatus: (id) => api.post(`/accounts/members/${id}/toggle-status/`),
 }
 
@@ -51,6 +57,15 @@ export const trainerAPI = {
   create: (d) => api.post('/trainers/list/', d),
   update: (id, d) => api.put(`/trainers/list/${id}/`, d),
   delete: (id) => api.delete(`/trainers/list/${id}/`),
+  getAssignedMembers: () => api.get('/trainers/assigned-members/'),
+  getWorkoutPlans: (p) => api.get('/trainers/workout-plans/', { params: p }),
+  createWorkoutPlan: (d) => api.post('/trainers/workout-plans/', d),
+  updateWorkoutPlan: (id, d) => api.patch(`/trainers/workout-plans/${id}/`, d),
+  deleteWorkoutPlan: (id) => api.delete(`/trainers/workout-plans/${id}/`),
+  getDietPlans: (p) => api.get('/trainers/diet-plans/', { params: p }),
+  createDietPlan: (d) => api.post('/trainers/diet-plans/', d),
+  updateDietPlan: (id, d) => api.patch(`/trainers/diet-plans/${id}/`, d),
+  deleteDietPlan: (id) => api.delete(`/trainers/diet-plans/${id}/`),
 }
 
 export const membershipAPI = {

@@ -66,7 +66,7 @@ const TESTIMONIALS = [
 ]
 
 export default function Home() {
-  const { isAuthenticated, isAdmin, isVendor } = useAuth()
+  const { isAuthenticated, isAdmin, isTrainer, isVendor } = useAuth()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -77,7 +77,7 @@ export default function Home() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const dashLink = isAdmin ? '/admin' : isVendor ? '/vendor' : '/dashboard'
+  const dashLink = isAdmin ? '/admin' : (isTrainer || isVendor) ? '/trainer' : '/dashboard'
 
   const scrollTo = (id) => {
     setMenuOpen(false)

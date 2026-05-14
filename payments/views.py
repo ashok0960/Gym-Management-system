@@ -15,7 +15,7 @@ class PaymentListView(generics.ListAPIView):
 
     def get_queryset(self):
         profile = self.request.user.profile
-        if profile.is_admin or profile.is_vendor:
+        if profile.is_admin or profile.is_trainer:
             return Payment.objects.all()
         return Payment.objects.filter(member=self.request.user)
 
@@ -30,7 +30,7 @@ class CreatePaymentView(generics.CreateAPIView):
 
         payment = serializer.save(
             member=self.request.user,
-            status='COMPLETED',
+            status='PAID',
             transaction_id=transaction_id
         )
 
@@ -74,12 +74,13 @@ class PaymentStatsView(generics.GenericAPIView):
 
     def get(self, request):
         profile = request.user.profile
-        if not (profile.is_admin or profile.is_vendor):
-            return Response({'error': 'Admin or Vendor access required'}, status=status.HTTP_403_FORBIDDEN)
+        if not (profile.is_admin or profile.is_trainer):
+            return Response({'error': 'Admin or Trainer access required'}, status=status.HTTP_403_FORBIDDEN)
 
-        total_revenue = Payment.objects.filter(status='COMPLETED').aggregate(Sum('amount'))['amount__sum'] or 0
+        paid_statuses = ['PAID', 'COMPLETED']
+        total_revenue = Payment.objects.filter(status__in=paid_statuses).aggregate(Sum('amount'))['amount__sum'] or 0
         monthly_revenue = Payment.objects.filter(
-            status='COMPLETED',
+            status__in=paid_statuses,
             payment_date__month=timezone.now().month,
             payment_date__year=timezone.now().year,
         ).aggregate(Sum('amount'))['amount__sum'] or 0
@@ -87,6 +88,6 @@ class PaymentStatsView(generics.GenericAPIView):
         return Response({
             'total_revenue': float(total_revenue),
             'monthly_revenue': float(monthly_revenue),
-            'total_transactions': Payment.objects.filter(status='COMPLETED').count(),
+            'total_transactions': Payment.objects.filter(status__in=paid_statuses).count(),
             'pending_payments': Payment.objects.filter(status='PENDING').count(),
         })

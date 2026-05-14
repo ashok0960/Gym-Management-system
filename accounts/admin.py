@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import MemberProfile
+from .models import MemberProfile, EmailVerificationCode
 
 
 class MemberProfileInline(admin.StackedInline):
@@ -31,3 +31,11 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
+
+
+@admin.register(EmailVerificationCode)
+class EmailVerificationCodeAdmin(admin.ModelAdmin):
+    list_display = ['email', 'purpose', 'expires_at', 'attempts', 'is_used', 'created_at']
+    list_filter = ['purpose', 'is_used', 'created_at']
+    search_fields = ['email']
+    readonly_fields = ['code_hash', 'created_at']

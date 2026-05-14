@@ -48,7 +48,7 @@ function VendorDashboard() {
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center text-2xl">🏪</div>
           <div>
-            <h1 className="text-xl font-bold">Vendor Dashboard</h1>
+            <h1 className="text-xl font-bold">Trainer Dashboard</h1>
             <p className="text-purple-200 text-sm">Welcome back, {user?.username}</p>
           </div>
         </div>

@@ -332,7 +332,7 @@ export default function AdminMembers() {
                   className="w-full border border-gray-300 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="MEMBER">Member</option>
-                  <option value="VENDOR">Vendor</option>
+                  <option value="TRAINER">Trainer</option>
                 </select>
               </div>
 

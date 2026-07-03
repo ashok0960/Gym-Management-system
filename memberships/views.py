@@ -11,13 +11,13 @@ class MembershipPlanListView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         profile = self.request.user.profile
-        if profile.is_admin or profile.is_vendor:
+        if profile.is_admin:
             return MembershipPlan.objects.all()
         return MembershipPlan.objects.filter(is_active=True)
 
     def create(self, request, *args, **kwargs):
-        if not (request.user.profile.is_admin or request.user.profile.is_vendor):
-            return Response({'error': 'Admin or Vendor access required'}, status=status.HTTP_403_FORBIDDEN)
+        if not request.user.profile.is_admin:
+            return Response({'error': 'Admin access required'}, status=status.HTTP_403_FORBIDDEN)
         return super().create(request, *args, **kwargs)
 
 
@@ -27,8 +27,8 @@ class MembershipPlanDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = MembershipPlanSerializer
 
     def update(self, request, *args, **kwargs):
-        if not (request.user.profile.is_admin or request.user.profile.is_vendor):
-            return Response({'error': 'Admin or Vendor access required'}, status=status.HTTP_403_FORBIDDEN)
+        if not request.user.profile.is_admin:
+            return Response({'error': 'Admin access required'}, status=status.HTTP_403_FORBIDDEN)
         return super().update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):

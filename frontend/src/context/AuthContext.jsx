@@ -71,12 +71,13 @@ export const AuthProvider = ({ children }) => {
   }
 
   const isAdmin = !!(user?.is_admin || user?.role === 'ADMIN')
-  const isVendor = !!(user?.is_vendor || user?.role === 'VENDOR')
-  const isMember = !isAdmin && !isVendor
+  const isTrainer = !!(user?.is_trainer || user?.is_vendor || user?.role === 'TRAINER' || user?.role === 'VENDOR')
+  const isVendor = isTrainer
+  const isMember = !isAdmin && !isTrainer
   const isAuthenticated = !!user
 
   return (
-    <AuthContext.Provider value={{ user, loading, isAdmin, isVendor, isMember, isAuthenticated, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, isAdmin, isTrainer, isVendor, isMember, isAuthenticated, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   )

@@ -40,7 +40,8 @@ export default function App() {
             {/* Admin routes */}
             <Route path="/admin/*" element={<PrivateRoute adminOnly><AdminPanel /></PrivateRoute>} />
 
-            {/* Vendor routes */}
+            {/* Trainer routes */}
+            <Route path="/trainer/*" element={<PrivateRoute trainerOnly><VendorPanel /></PrivateRoute>} />
             <Route path="/vendor/*" element={<PrivateRoute vendorOnly><VendorPanel /></PrivateRoute>} />
 
             <Route path="*" element={<Navigate to="/home" replace />} />

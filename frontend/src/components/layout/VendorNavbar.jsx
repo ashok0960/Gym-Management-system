@@ -8,13 +8,11 @@ import {
 } from '@heroicons/react/24/outline'
 
 const LINKS = [
-  { to: '/vendor', label: 'Dashboard', Icon: HomeIcon },
-  { to: '/vendor/members', label: 'Members', Icon: UsersIcon },
-  { to: '/vendor/trainers', label: 'Trainers', Icon: UserGroupIcon },
-  { to: '/vendor/classes', label: 'Classes', Icon: CalendarIcon },
-  { to: '/vendor/memberships', label: 'Plans', Icon: CreditCardIcon },
-  { to: '/vendor/payments', label: 'Payments', Icon: CurrencyDollarIcon },
-  { to: '/vendor/attendance', label: 'Attendance', Icon: ClipboardDocumentListIcon },
+  { to: '/trainer', label: 'Dashboard', Icon: HomeIcon },
+  { to: '/trainer/members', label: 'Members', Icon: UsersIcon },
+  { to: '/trainer/classes', label: 'Classes', Icon: CalendarIcon },
+  { to: '/trainer/payments', label: 'Payments', Icon: CurrencyDollarIcon },
+  { to: '/trainer/attendance', label: 'Attendance', Icon: ClipboardDocumentListIcon },
 ]
 
 export default function VendorNavbar() {
@@ -32,18 +30,18 @@ export default function VendorNavbar() {
   }, [])
   useEffect(() => setMobile(false), [pathname])
 
-  const active = (to) => to === '/vendor' ? pathname === to : pathname.startsWith(to)
+  const active = (to) => to === '/trainer' ? pathname === to : pathname.startsWith(to)
   const handleLogout = () => { logout(); navigate('/login') }
 
   return (
     <nav className="bg-purple-900 text-white sticky top-0 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
-        <Link to="/vendor" className="flex items-center gap-2 flex-shrink-0">
+        <Link to="/trainer" className="flex items-center gap-2 flex-shrink-0">
           <div className="w-9 h-9 bg-purple-500 rounded-xl flex items-center justify-center">
             <BuildingStorefrontIcon className="w-5 h-5 text-white" />
           </div>
           <span className="font-bold text-lg">Gym<span className="text-purple-300">MS</span></span>
-          <span className="text-xs bg-purple-500 px-2 py-0.5 rounded-full font-semibold hidden sm:inline">VENDOR</span>
+          <span className="text-xs bg-purple-500 px-2 py-0.5 rounded-full font-semibold hidden sm:inline">TRAINER</span>
         </Link>
 
         <div className="hidden xl:flex items-center gap-0.5">
@@ -70,7 +68,7 @@ export default function VendorNavbar() {
                   <p className="font-semibold text-sm text-gray-900">{user?.username}</p>
                   <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                   <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold">
-                    <BuildingStorefrontIcon className="w-3 h-3" /> Vendor
+                    <BuildingStorefrontIcon className="w-3 h-3" /> Trainer
                   </span>
                 </div>
                 <button onClick={handleLogout} className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50">

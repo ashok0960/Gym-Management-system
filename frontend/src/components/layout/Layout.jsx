@@ -8,14 +8,14 @@ import Footer from './Footer'
 import SupportWidget from '../common/SupportWidget'
 
 export default function Layout({ children }) {
-  const { isAuthenticated, isAdmin, isVendor } = useAuth()
+  const { isAuthenticated, isAdmin, isTrainer, isVendor } = useAuth()
   const { pathname } = useLocation()
   const isHomePage = pathname === '/home' || pathname === '/' || pathname === '/login' || pathname === '/register'
 
   const renderNavbar = () => {
     if (!isAuthenticated) return null
     if (isAdmin) return <AdminNavbar />
-    if (isVendor) return <VendorNavbar />
+    if (isTrainer || isVendor) return <VendorNavbar />
     return <Navbar />
   }
 

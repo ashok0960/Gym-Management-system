@@ -15,9 +15,10 @@ class GymClassViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         profile = self.request.user.profile
-        # Admin/vendor see all classes; members only see active ones
-        if profile.is_admin or profile.is_vendor:
+        if profile.is_admin:
             queryset = GymClass.objects.all()
+        elif profile.is_trainer:
+            queryset = GymClass.objects.filter(trainer__user=self.request.user)
         else:
             queryset = GymClass.objects.filter(is_active=True)
 
@@ -37,20 +38,22 @@ class GymClassViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         profile = self.request.user.profile
-        if not (profile.is_admin or profile.is_vendor):
-            raise PermissionDenied("Only admins or vendors can create classes")
+        if not profile.is_admin:
+            raise PermissionDenied("Only admins can create classes")
         serializer.save()
 
     def perform_update(self, serializer):
         profile = self.request.user.profile
-        if not (profile.is_admin or profile.is_vendor):
-            raise PermissionDenied("Only admins or vendors can update classes")
+        if not (profile.is_admin or profile.is_trainer):
+            raise PermissionDenied("Only admins or trainers can update classes")
+        if profile.is_trainer and serializer.instance.trainer.user_id != self.request.user.id:
+            raise PermissionDenied("You can only update your assigned classes")
         serializer.save()
 
     def perform_destroy(self, instance):
         profile = self.request.user.profile
-        if not (profile.is_admin or profile.is_vendor):
-            raise PermissionDenied("Only admins or vendors can delete classes")
+        if not profile.is_admin:
+            raise PermissionDenied("Only admins can delete classes")
         instance.is_active = False
         instance.save()
 

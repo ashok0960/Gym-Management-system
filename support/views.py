@@ -40,7 +40,7 @@ def get_ai_response(message):
         if kw in msg_lower:
             return (
                 "I understand this needs personal attention. I'm escalating your message to our staff. "
-                "An admin or vendor will respond to you shortly. Thank you for your patience! 🙏",
+                "An admin or trainer will respond to you shortly. Thank you for your patience!",
                 True
             )
     return (
@@ -104,7 +104,7 @@ class StaffTicketsView(generics.ListAPIView):
 
     def get_queryset(self):
         profile = self.request.user.profile
-        if not (profile.is_admin or profile.is_vendor):
+        if not (profile.is_admin or profile.is_trainer):
             return SupportTicket.objects.none()
         return SupportTicket.objects.filter(is_escalated=True)
 
@@ -114,7 +114,7 @@ class StaffReplyView(APIView):
 
     def post(self, request, ticket_id):
         profile = request.user.profile
-        if not (profile.is_admin or profile.is_vendor):
+        if not (profile.is_admin or profile.is_trainer):
             return Response({'error': 'Staff only'}, status=status.HTTP_403_FORBIDDEN)
 
         message_text = request.data.get('message', '').strip()
@@ -144,7 +144,7 @@ class StaffTicketDetailView(APIView):
 
     def get(self, request, ticket_id):
         profile = request.user.profile
-        if not (profile.is_admin or profile.is_vendor):
+        if not (profile.is_admin or profile.is_trainer):
             return Response({'error': 'Staff only'}, status=status.HTTP_403_FORBIDDEN)
         try:
             ticket = SupportTicket.objects.get(id=ticket_id)
@@ -154,7 +154,7 @@ class StaffTicketDetailView(APIView):
 
     def patch(self, request, ticket_id):
         profile = request.user.profile
-        if not (profile.is_admin or profile.is_vendor):
+        if not (profile.is_admin or profile.is_trainer):
             return Response({'error': 'Staff only'}, status=status.HTTP_403_FORBIDDEN)
         try:
             ticket = SupportTicket.objects.get(id=ticket_id)

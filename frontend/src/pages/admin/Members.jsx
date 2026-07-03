@@ -311,8 +311,8 @@ export default function AdminMembers() {
                 <option value="MEMBER">
                   Member
                 </option>
-                <option value="VENDOR">
-                  Vendor
+                <option value="TRAINER">
+                  Trainer
                 </option>
               </select>
 

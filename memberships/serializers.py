@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import MembershipPlan, MembershipUpgrade
+from .models import *
 
 class MembershipPlanSerializer(serializers.ModelSerializer):
     features_list = serializers.SerializerMethodField()

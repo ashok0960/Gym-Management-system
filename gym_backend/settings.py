@@ -41,10 +41,13 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = 'django-insecure-^+7debf(*sgw410qh!^*mnrm#r%n5&vjkal6#p2rcnx-#b42&%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    ".onrender.com",
+]
 
 # Application definition
 
@@ -153,7 +156,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://gym-management-system-eight-drab.vercel.app",
+]
 CORS_ALLOW_CREDENTIALS = True
 
 EMAIL_HOST = os.getenv('EMAIL_HOST', '')

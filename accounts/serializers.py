@@ -33,7 +33,7 @@ class MemberProfileSerializer(serializers.ModelSerializer):
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField(write_only=True, required=True)
+    Conform_password = serializers.CharField(write_only=True, required=True)
     phone = serializers.CharField(required=True)
     address = serializers.CharField(required=True)
     first_name = serializers.CharField(required=True)
@@ -43,10 +43,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'password2', 'first_name', 'last_name', 'phone', 'address', 'role', 'email_code']
+        fields = ['username', 'email', 'password', 'Conform_password', 'first_name', 'last_name', 'phone', 'address', 'role', 'email_code']
 
     def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
+        if attrs['password'] != attrs['Conform_password']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
         if User.objects.filter(username__iexact=attrs['username']).exists():
             raise serializers.ValidationError({"username": "This username is already taken."})
@@ -82,7 +82,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password')
         verification = validated_data.pop('_verification', None)
         validated_data.pop('email_code', None)
-        validated_data.pop('password2')
+        validated_data.pop('Conform_password')
 
         user = User.objects.create_user(**validated_data)
         user.set_password(password)

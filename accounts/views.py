@@ -15,11 +15,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 import secrets
 from datetime import timedelta
-from .serializers import (
-    RegisterSerializer, MemberProfileSerializer, ChangePasswordSerializer, UpdateProfileSerializer,
-    MemberManagementSerializer, ForgotPasswordSerializer, ResetPasswordSerializer,
-    SendEmailVerificationCodeSerializer,
-)
+from .serializers import *
 from .models import MemberProfile, EmailVerificationCode
 
 

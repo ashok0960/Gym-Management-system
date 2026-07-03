@@ -2,8 +2,8 @@ from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
-from .models import Trainer, WorkoutPlan, DietPlan
-from .serializers import TrainerSerializer, WorkoutPlanSerializer, DietPlanSerializer
+from .models import Trainer, WorkoutPlan, DietPlan, BodyMetrics
+from .serializers import TrainerSerializer, WorkoutPlanSerializer, DietPlanSerializer, BodyMetricsSerializer
 
 
 def is_admin(profile):
@@ -33,8 +33,7 @@ class TrainerViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        profile = self.request.user.profile
-        if not is_admin(profile):
+        if not is_admin(self.request.user.profile):
             raise PermissionDenied("Only admins can create trainers")
         serializer.save()
 
@@ -47,8 +46,7 @@ class TrainerViewSet(viewsets.ModelViewSet):
         serializer.save()
 
     def perform_destroy(self, instance):
-        profile = self.request.user.profile
-        if not is_admin(profile):
+        if not is_admin(self.request.user.profile):
             raise PermissionDenied("Only admins can delete trainers")
         instance.delete()
 
@@ -142,3 +140,36 @@ class WorkoutPlanViewSet(PlanAccessMixin, viewsets.ModelViewSet):
 class DietPlanViewSet(PlanAccessMixin, viewsets.ModelViewSet):
     serializer_class = DietPlanSerializer
     queryset = DietPlan.objects.all()
+
+
+class BodyMetricsViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = BodyMetricsSerializer
+
+    def get_queryset(self):
+        profile = self.request.user.profile
+        if profile.is_admin:
+            queryset = BodyMetrics.objects.select_related('member__user', 'recorded_by').all()
+        elif profile.is_trainer:
+            trainer = getattr(self.request.user, 'trainer_profile', None)
+            queryset = BodyMetrics.objects.select_related('member__user', 'recorded_by').filter(
+                member__assigned_trainer=trainer
+            )
+        else:
+            queryset = BodyMetrics.objects.select_related('member__user', 'recorded_by').filter(member=profile)
+
+        member_id = self.request.query_params.get('member')
+        if member_id:
+            queryset = queryset.filter(member_id=member_id)
+        return queryset
+
+    def perform_create(self, serializer):
+        profile = self.request.user.profile
+        member = serializer.validated_data['member']
+        if profile.is_admin:
+            serializer.save(recorded_by=self.request.user)
+            return
+        trainer = getattr(self.request.user, 'trainer_profile', None)
+        if not trainer or member.assigned_trainer_id != trainer.id:
+            raise PermissionDenied("You can only record metrics for your assigned members")
+        serializer.save(recorded_by=self.request.user)

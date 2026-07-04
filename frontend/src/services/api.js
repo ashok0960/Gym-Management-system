@@ -19,9 +19,13 @@ api.interceptors.response.use(res => res, async (error) => {
     try {
       const refresh = localStorage.getItem('refresh_token')
       if (!refresh) throw new Error('no refresh')
-      const res = await axios.post('/api/token/refresh/', { refresh })
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/token/refresh/`,
+        { refresh }
+      )
+
       localStorage.setItem('access_token', res.data.access)
-      api.defaults.headers.common['Authorization'] = `Bearer ${res.data.access}`
+      api.defaults.headers.common.Authorization = `Bearer ${res.data.access}`
       orig.headers.Authorization = `Bearer ${res.data.access}`
       return api(orig)
     } catch { localStorage.clear(); window.location.href = '/login' }
